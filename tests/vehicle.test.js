@@ -1,37 +1,38 @@
 const { test, expect } = require('@playwright/test');
 
-test('vehicleFormTest', async ({ page }) => {
 
+test('AddVehicleToApartment', async ({ page }) => {
     const data = {
         url: 'http://localhost:3000/api/vehicle',
-        requestData: {
-            "idApartment": 200,
-            "state": "Activo",
-            "description": "Carro morado de gama alta",
-            "licenseplate": "ZZZ000"
+        // url: 'https://apptowerbackend.onrender.com/api/vehicle',
+        vehicleData: {
+            "idApartment": 1,
+            // "state": "Activo",
+            "description": "Rojo",
+            "licenseplate": "ABL33F"
         }
     };
 
     try {
         const response = await page.evaluate(async (data) => {
-            console.log(data.url)
             const response = await fetch(data.url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data.requestData)
+                body: JSON.stringify(data.vehicleData)
             });
             return {
                 status: response.status,
                 body: await response.json()
             };
-        }, data); // Pasamos un objeto con la URL y los datos como argumento
+        }, data);
+
 
         expect(response.status).toBe(200);
         const body = response.body;
-        expect(body.message).toBe('Vehiculo registrado exitosamente');
+        expect(body.message).toBe('Inicio de sesión exitoso');
     } catch (error) {
-        console.error('Error al registrar vehiculo:', error);
+        console.error('Error al hacer la solicitud:', error);
     }
 });
